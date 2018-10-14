@@ -1,0 +1,85 @@
+{
+  "version": "1.0.0",
+  "cells": [
+    {
+      "type": "cs",
+      "input": "assist"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles"
+    },
+    {
+      "type": "cs",
+      "input": "importFiles [ \"C:\\\\h2o\\\\WA_Fn-UseC_-HR-Employee-Attrition.csv\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "setupParse source_frames: [ \"nfs:\\\\C:\\\\h2o\\\\WA_Fn-UseC_-HR-Employee-Attrition.csv\" ]"
+    },
+    {
+      "type": "cs",
+      "input": "parseFiles\n  source_frames: [\"nfs:\\\\C:\\\\h2o\\\\WA_Fn-UseC_-HR-Employee-Attrition.csv\"]\n  destination_frame: \"WA_Fn_UseC__HR_Employee_Attrition.hex\"\n  parse_type: \"CSV\"\n  separator: 44\n  number_columns: 35\n  single_quotes: false\n  column_names: [\"Age\",\"Attrition\",\"BusinessTravel\",\"DailyRate\",\"Department\",\"DistanceFromHome\",\"Education\",\"EducationField\",\"EmployeeCount\",\"EmployeeNumber\",\"EnvironmentSatisfaction\",\"Gender\",\"HourlyRate\",\"JobInvolvement\",\"JobLevel\",\"JobRole\",\"JobSatisfaction\",\"MaritalStatus\",\"MonthlyIncome\",\"MonthlyRate\",\"NumCompaniesWorked\",\"Over18\",\"OverTime\",\"PercentSalaryHike\",\"PerformanceRating\",\"RelationshipSatisfaction\",\"StandardHours\",\"StockOptionLevel\",\"TotalWorkingYears\",\"TrainingTimesLastYear\",\"WorkLifeBalance\",\"YearsAtCompany\",\"YearsInCurrentRole\",\"YearsSinceLastPromotion\",\"YearsWithCurrManager\"]\n  column_types: [\"Numeric\",\"Enum\",\"Enum\",\"Numeric\",\"Enum\",\"Enum\",\"Enum\",\"Enum\",\"Numeric\",\"Numeric\",\"Enum\",\"Enum\",\"Numeric\",\"Enum\",\"Enum\",\"Enum\",\"Enum\",\"Enum\",\"Numeric\",\"Numeric\",\"Numeric\",\"Enum\",\"Enum\",\"Numeric\",\"Enum\",\"Enum\",\"Numeric\",\"Enum\",\"Numeric\",\"Numeric\",\"Enum\",\"Numeric\",\"Numeric\",\"Numeric\",\"Numeric\"]\n  delete_on_done: false\n  check_header: 1\n  chunk_size: 14249"
+    },
+    {
+      "type": "cs",
+      "input": "getFrameSummary \"WA_Fn_UseC__HR_Employee_Attrition.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "assist splitFrame, \"WA_Fn_UseC__HR_Employee_Attrition.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "splitFrame \"WA_Fn_UseC__HR_Employee_Attrition.hex\", [0.7,0.15], [\"WA_Fn_UseC__HR_Employee_Attrition.hex_0.70_train\",\"WA_Fn_UseC__HR_Employee_Attrition.hex_0.15_validation\",\"WA_Fn_UseC__HR_Employee_Attrition.hex_0.15_test\"], 1234"
+    },
+    {
+      "type": "cs",
+      "input": "assist buildModel, null, training_frame: \"WA_Fn_UseC__HR_Employee_Attrition.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "buildModel 'gbm', {\"model_id\":\"gbm-508038d8-418e-4c20-b39b-ecbafde01b37\",\"training_frame\":\"WA_Fn_UseC__HR_Employee_Attrition.hex_0.70_train\",\"validation_frame\":\"WA_Fn_UseC__HR_Employee_Attrition.hex_0.15_validation\",\"nfolds\":\"5\",\"response_column\":\"Attrition\",\"ignored_columns\":[\"EmployeeCount\",\"EmployeeNumber\",\"Over18\",\"StandardHours\",\"StockOptionLevel\"],\"ignore_const_cols\":true,\"ntrees\":50,\"max_depth\":5,\"min_rows\":10,\"nbins\":20,\"seed\":-1,\"learn_rate\":0.1,\"sample_rate\":1,\"col_sample_rate\":1,\"score_each_iteration\":false,\"score_tree_interval\":0,\"fold_assignment\":\"AUTO\",\"balance_classes\":false,\"nbins_top_level\":1024,\"nbins_cats\":1024,\"r2_stopping\":1.7976931348623157e+308,\"stopping_rounds\":0,\"stopping_metric\":\"AUTO\",\"stopping_tolerance\":0.001,\"max_runtime_secs\":0,\"learn_rate_annealing\":1,\"distribution\":\"AUTO\",\"huber_alpha\":0.9,\"checkpoint\":\"\",\"col_sample_rate_per_tree\":1,\"min_split_improvement\":0.00001,\"histogram_type\":\"AUTO\",\"categorical_encoding\":\"AUTO\",\"custom_metric_func\":\"\",\"keep_cross_validation_predictions\":false,\"keep_cross_validation_fold_assignment\":false,\"build_tree_one_node\":false,\"sample_rate_per_class\":[],\"col_sample_rate_change_per_level\":1,\"max_abs_leafnode_pred\":1.7976931348623157e+308,\"pred_noise_bandwidth\":0,\"calibrate_model\":false}"
+    },
+    {
+      "type": "cs",
+      "input": "getModel \"gbm-508038d8-418e-4c20-b39b-ecbafde01b37\""
+    },
+    {
+      "type": "cs",
+      "input": "predict model: \"gbm-508038d8-418e-4c20-b39b-ecbafde01b37\""
+    },
+    {
+      "type": "cs",
+      "input": "predict model: \"gbm-508038d8-418e-4c20-b39b-ecbafde01b37\", frame: \"WA_Fn_UseC__HR_Employee_Attrition.hex_0.15_test\", predictions_frame: \"prediction-7e873f97-9f05-45bf-948f-6499d8603bc8\""
+    },
+    {
+      "type": "cs",
+      "input": "runAutoML"
+    },
+    {
+      "type": "cs",
+      "input": "runAutoML {\"training_frame\":\"WA_Fn_UseC__HR_Employee_Attrition.hex_0.70_train\",\"response_column\":\"Attrition\",\"validation_frame\":\"WA_Fn_UseC__HR_Employee_Attrition.hex_0.15_validation\",\"seed\":-1,\"max_models\":0,\"max_runtime_secs\":3600,\"stopping_metric\":\"AUTO\",\"sort_metric\":null,\"stopping_rounds\":3,\"stopping_tolerance\":-1,\"nfolds\":5,\"balance_classes\":false,\"class_sampling_factors\":[],\"max_after_balance_size\":5,\"keep_cross_validation_predictions\":true,\"keep_cross_validation_models\":true,\"ignored_columns\":[\"EmployeeCount\",\"Over18\",\"StandardHours\"],\"exclude_algos\":[],\"project_name\":\"Employee Attrition AutoML\"}"
+    },
+    {
+      "type": "cs",
+      "input": "getLeaderboard \"Employee Attrition AutoML\""
+    },
+    {
+      "type": "cs",
+      "input": "predict frame: \"WA_Fn_UseC__HR_Employee_Attrition.hex\""
+    },
+    {
+      "type": "cs",
+      "input": "predict model: \"GBM_grid_0_AutoML_20181014_195919_model_4\", frame: \"WA_Fn_UseC__HR_Employee_Attrition.hex\", predictions_frame: \"prediction-87b3698f-2497-46e8-b7f2-09671b1eb4c2\""
+    },
+    {
+      "type": "cs",
+      "input": "exportModel"
+    },
+    {
+      "type": "cs",
+      "input": "exportModel \"GBM_grid_0_AutoML_20181014_191849_model_4\", \"C:\\\\h2o\\\\model\", overwrite: false, format: \"bin\""
+    }
+  ]
+}
